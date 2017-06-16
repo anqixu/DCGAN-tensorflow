@@ -141,7 +141,7 @@ class DCGAN(object):
     self.d_loss_real_sum = scalar_summary("d_loss_real", self.d_loss_real)
     self.d_loss_fake_sum = scalar_summary("d_loss_fake", self.d_loss_fake)
                           
-    self.d_loss = self.d_loss_real + self.d_loss_fake
+    self.d_loss = (self.d_loss_real + self.d_loss_fake)/2.0
 
     self.g_loss_sum = scalar_summary("g_loss", self.g_loss)
     self.d_loss_sum = scalar_summary("d_loss", self.d_loss)
