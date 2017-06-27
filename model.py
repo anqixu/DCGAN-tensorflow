@@ -95,11 +95,8 @@ class DCGAN(object):
 
     self.inputs = tf.placeholder(
       tf.float32, [self.batch_size] + image_dims, name='real_images')
-    self.sample_inputs = tf.placeholder(
-      tf.float32, [self.sample_num] + image_dims, name='sample_inputs')
 
     inputs = self.inputs
-    sample_inputs = self.sample_inputs
 
     self.z = tf.placeholder(
       tf.float32, [None, self.z_dim], name='z')
@@ -249,9 +246,7 @@ class DCGAN(object):
                   self.inputs: sample_inputs,
               },
             )
-            manifold_h = int(np.ceil(np.sqrt(samples.shape[0])))
-            manifold_w = int(np.floor(np.sqrt(samples.shape[0])))
-            save_images(samples, [manifold_h, manifold_w],
+            save_images(samples, image_manifold_size(samples.shape[0]),
                   './{}/train_{:02d}_{:04d}.png'.format(config.sample_dir, epoch, idx))
             print("[Sample] d_loss: %.8f, g_loss: %.8f" % (d_loss, g_loss)) 
           except:
@@ -269,7 +264,7 @@ class DCGAN(object):
       h1 = lrelu(self.d_bn1(conv2d(h0, self.df_dim*2, name='d_h1_conv')))
       h2 = lrelu(self.d_bn2(conv2d(h1, self.df_dim*4, name='d_h2_conv')))
       h3 = lrelu(self.d_bn3(conv2d(h2, self.df_dim*8, name='d_h3_conv')))
-      h4 = linear(tf.reshape(h3, [self.batch_size, -1]), 1, 'd_h3_lin')
+      h4 = linear(tf.reshape(h3, [self.batch_size, -1]), 1, 'd_h4_lin')
 
       return tf.nn.sigmoid(h4), h4
 
